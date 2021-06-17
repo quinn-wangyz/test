@@ -34,7 +34,8 @@ func main() {
 		glog.Fatalln(err)
 	}
 
-	nacos_service.InitService(conf)
+	//获取 nacos 服务
+	nacos_service.GetNacosRegisterService(conf)
 
 	// 启动 Web 服务接口
 	err = startWeb(conf.Self.Port)
@@ -49,16 +50,8 @@ func registerServiceInstance(conf *config.Config) error {
 		return err
 	}
 
-	nacos_helper.RegisterServiceInstance(nil, &ncopts.RegisterServiceOptions{
-		ServiceName: "test",
-		Ip:          "10.10.20.117",
-		Port:        uint64(9999),
-		GroupName:   "DEFAULT_GROUP",
-		//GroupName:   os.Getenv("APP_GROUP_NAME"), // 区分不同运行环境，如 pre-production、production 而不需要更改配置，只需要运行时设置不同的环境变量
-	})
-
 	glog.Infof(">>>>> Register service instance: ServiceName - %s, IP - %s, Port - %d\n", conf.Self.Name, hostname, conf.Self.Port)
-	fmt.Println("9999999999")
+	fmt.Println("00000000000000000")
 	return nacos_helper.RegisterServiceInstance(nil, &ncopts.RegisterServiceOptions{
 		ServiceName: conf.Self.Name,
 		Ip:          hostname,

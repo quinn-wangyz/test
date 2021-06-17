@@ -1,3 +1,6 @@
 {
-    "terminal.integrated.environmentChangesIndicator": "on"
+    "terminal.integrated.environmentChangesIndicator": "on",
+    "terminal.integrated.env.windows": {
+        
+    }
 }

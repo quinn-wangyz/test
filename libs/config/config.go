@@ -6,9 +6,10 @@ import (
 
 type Config struct {
 	Self struct {
-		Name    string `yaml:"name"`    // 服务名称
-		Port    int    `yaml:"port"`    // 监听端口
-		LogsDir string `yaml:"logsDir"` // 接口查询存储目录
+		Names   []string `yaml:"names"`   //服务名列表
+		Name    string   `yaml:"name"`    // 服务名称
+		Port    int      `yaml:"port"`    // 监听端口
+		LogsDir string   `yaml:"logsDir"` // 接口查询存储目录
 	} `yaml:"self"`
 }
 
