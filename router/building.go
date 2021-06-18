@@ -12,17 +12,17 @@ import (
 )
 
 func BuildingRouter(route iris.Party) {
-	route.Post("/list", BuildingListFunc)                               //楼宇列表
-	route.Post("/add", BuildingAddFunc)                                 //添加楼宇
-	route.Get("/get/{buildingId:string}", BuildingGetFunc)              //获取楼宇详情
-	route.Post("/update", BuildingUpdateFunc)                           //更新楼宇信息
-	route.Get("/get/{buildingId:string}/floors", BuildingGetFloorsFunc) //获取楼宇的楼层列表
-	route.Post("/update/floors", BuildingUpdateFloorsFunc)              //更新楼层信息
-	route.Get("/delete/{buildingId:string}", BuildingDeleteFunc)        //删除楼宇
+	route.Post("/list", listBuildingHandler)                               //楼宇列表
+	route.Post("/add", addBuildingHandler)                                 //添加楼宇
+	route.Get("/get/{buildingId:string}", getBuildingHandler)              //获取楼宇详情
+	route.Post("/update", updateBuildingHandler)                           //更新楼宇信息
+	route.Get("/get/{buildingId:string}/floors", getBuildingFloorsHandler) //获取楼宇的楼层列表
+	route.Post("/update/floors", updateBuildingFloorsHandler)              //更新楼层信息
+	route.Get("/delete/{buildingId:string}", deleteBuildingHandler)        //删除楼宇
 }
 
 //楼宇列表
-func BuildingListFunc(ctx iris.Context) {
+func listBuildingHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/list"), data, "application/json")
@@ -30,7 +30,7 @@ func BuildingListFunc(ctx iris.Context) {
 }
 
 //楼宇添加
-func BuildingAddFunc(ctx iris.Context) {
+func addBuildingHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/"), data, "application/json")
@@ -38,14 +38,14 @@ func BuildingAddFunc(ctx iris.Context) {
 }
 
 //获取楼宇详情
-func BuildingGetFunc(ctx iris.Context) {
+func getBuildingHandler(ctx iris.Context) {
 	buildingId := ctx.Params().Get("buildingId")
 	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId))
 	ctx.Write([]byte(resp))
 }
 
 //更新楼宇信息
-func BuildingUpdateFunc(ctx iris.Context) {
+func updateBuildingHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	buildingId, _ := data["id"].(string)
@@ -54,14 +54,14 @@ func BuildingUpdateFunc(ctx iris.Context) {
 }
 
 //获取楼宇的楼层列表
-func BuildingGetFloorsFunc(ctx iris.Context) {
+func getBuildingFloorsHandler(ctx iris.Context) {
 	buildingId := ctx.Params().Get("buildingId")
 	resp := httpUtil.Get(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId, "/floors"))
 	ctx.Write([]byte(resp))
 }
 
 //更新楼层信息
-func BuildingUpdateFloorsFunc(ctx iris.Context) {
+func updateBuildingFloorsHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	buildingId, _ := data["buildingId"].(string)
@@ -70,7 +70,7 @@ func BuildingUpdateFloorsFunc(ctx iris.Context) {
 }
 
 //删除楼宇
-func BuildingDeleteFunc(ctx iris.Context) {
+func deleteBuildingHandler(ctx iris.Context) {
 	buildingId := ctx.Params().Get("buildingId")
 	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId))
 	ctx.Write([]byte(resp))
