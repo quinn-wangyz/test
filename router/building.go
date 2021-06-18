@@ -1,36 +1,87 @@
 package router
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"robot-api/libs/cache"
+	"robot-api/libs/config"
 	"robot-api/libs/httpUtil"
 
-	"github.com/golang/glog"
 	"github.com/kataras/iris/v12"
-	response "github.com/zhangsq-ax/iris-response-helper"
 )
 
 func BuildingRouter(route iris.Party) {
-	route.Post("/list", BuildingListFunc) //楼宇列表
-	route.Post("/list/test", BuildingListTestFunc)
+	route.Post("/list", BuildingListFunc)                               //楼宇列表
+	route.Post("/add", BuildingAddFunc)                                 //添加楼宇
+	route.Get("/get/{buildingId:string}", BuildingGetFunc)              //获取楼宇详情
+	route.Post("/update", BuildingUpdateFunc)                           //更新楼宇信息
+	route.Get("/get/{buildingId:string}/floors", BuildingGetFloorsFunc) //获取楼宇的楼层列表
+	route.Post("/update/floors", BuildingUpdateFloorsFunc)              //更新楼层信息
+	route.Get("/delete/{buildingId:string}", BuildingDeleteFunc)        //删除楼宇
 }
 
+//楼宇列表
 func BuildingListFunc(ctx iris.Context) {
-	fmt.Println(cache.Get("robot-api"))
-	res := response.NewResponseHelper(&ctx, glog.Errorln)
-	defer res.ResponseJSON("Failed to write response")
-	s, _ := ioutil.ReadAll(ctx.Request().Body) //把	body 内容读入字符串 s
-	fmt.Println(string(s))
-	fmt.Println(cache.Get("robot-api") + "/list/test")
-	returnValue := httpUtil.Post(cache.Get("robot-api")+"/building/list/test", ctx.Request().Body, "application/json")
-	fmt.Println(returnValue)
+	body, _ := ioutil.ReadAll(ctx.Request().Body)
+	data := jsonUnmarshal(body)
+	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/list"), data, "application/json")
+	ctx.Write([]byte(resp))
 }
 
-func BuildingListTestFunc(ctx iris.Context) {
-	fmt.Println("----------------------")
-	res := response.NewResponseHelper(&ctx, glog.Errorln)
-	defer res.ResponseJSON("Failed to write response")
-	s, _ := ioutil.ReadAll(ctx.Request().Body) //把	body 内容读入字符串 s
-	fmt.Println(string(s))
+//楼宇添加
+func BuildingAddFunc(ctx iris.Context) {
+	body, _ := ioutil.ReadAll(ctx.Request().Body)
+	data := jsonUnmarshal(body)
+	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/"), data, "application/json")
+	ctx.Write([]byte(resp))
+}
+
+//获取楼宇详情
+func BuildingGetFunc(ctx iris.Context) {
+	buildingId := ctx.Params().Get("buildingId")
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId))
+	ctx.Write([]byte(resp))
+}
+
+//更新楼宇信息
+func BuildingUpdateFunc(ctx iris.Context) {
+	body, _ := ioutil.ReadAll(ctx.Request().Body)
+	data := jsonUnmarshal(body)
+	buildingId, _ := data["id"].(string)
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId), data, "application/json")
+	ctx.Write([]byte(resp))
+}
+
+//获取楼宇的楼层列表
+func BuildingGetFloorsFunc(ctx iris.Context) {
+	buildingId := ctx.Params().Get("buildingId")
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId, "/floors"))
+	ctx.Write([]byte(resp))
+}
+
+//更新楼层信息
+func BuildingUpdateFloorsFunc(ctx iris.Context) {
+	body, _ := ioutil.ReadAll(ctx.Request().Body)
+	data := jsonUnmarshal(body)
+	buildingId, _ := data["buildingId"].(string)
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId, "/floors"), data, "application/json")
+	ctx.Write([]byte(resp))
+}
+
+//删除楼宇
+func BuildingDeleteFunc(ctx iris.Context) {
+	buildingId := ctx.Params().Get("buildingId")
+	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId))
+	ctx.Write([]byte(resp))
+}
+
+//解析boby数据
+func jsonUnmarshal(data []byte) map[string]interface{} {
+	var i map[string]interface{}
+	err := json.Unmarshal(data, &i)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return i
 }

@@ -51,7 +51,6 @@ func registerServiceInstance(conf *config.Config) error {
 	}
 
 	glog.Infof(">>>>> Register service instance: ServiceName - %s, IP - %s, Port - %d\n", conf.Self.Name, hostname, conf.Self.Port)
-	fmt.Println("00000000000000000")
 	return nacos_helper.RegisterServiceInstance(nil, &ncopts.RegisterServiceOptions{
 		ServiceName: conf.Self.Name,
 		Ip:          hostname,

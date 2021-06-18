@@ -12,7 +12,6 @@ import (
 func GetNacosRegisterService(conf *config.Config) {
 	names := conf.Self.Names
 	for _, name := range names {
-		fmt.Println(name)
 		instance, _ := nacos_helper.SelectServiceInstance(nil, &ncopts.SelectServiceInstanceOptions{
 			ServiceName: name,
 			GroupName:   "DEFAULT_GROUP",
@@ -20,4 +19,8 @@ func GetNacosRegisterService(conf *config.Config) {
 		})
 		cache.Set(name, fmt.Sprintf("http://%s:%d", instance.Ip, instance.Port))
 	}
+}
+
+func GetServiceUrl(serviceName string) string {
+	return cache.Get(serviceName)
 }

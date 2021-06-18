@@ -3,9 +3,11 @@ package httpUtil
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -52,6 +54,37 @@ func Post(url string, data interface{}, contentType string) string {
 	}
 	defer resp.Body.Close()
 
+	result, _ := ioutil.ReadAll(resp.Body)
+	return string(result)
+}
+
+func Put(url string, data interface{}, contentType string) string {
+
+	// 超时时间：5秒
+	client := &http.Client{Timeout: 5 * time.Second}
+	jsonStr, _ := json.Marshal(data)
+	fmt.Println(string(jsonStr))
+	payload := strings.NewReader(string(jsonStr))
+	req, _ := http.NewRequest("PUT", url, payload)
+	req.Header.Add("Content-Type", contentType)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	result, _ := ioutil.ReadAll(resp.Body)
+	return string(result)
+}
+
+func Delete(url string) string {
+	// 超时时间：5秒
+	client := &http.Client{Timeout: 5 * time.Second}
+	req, _ := http.NewRequest("DELETE", url, nil)
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
 	result, _ := ioutil.ReadAll(resp.Body)
 	return string(result)
 }
