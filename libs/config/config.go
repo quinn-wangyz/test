@@ -10,9 +10,11 @@ type Config struct {
 	Self struct {
 		Name                string   `yaml:"name"`                //注册服务名称
 		Names               []string `yaml:"names"`               //服务名列表
-		MapSerivceName      string   `yaml:"mapSerivceName"`      // 地图服务名称
-		RobotSerivceName    string   `yaml:"robotSerivceName"`    // 机器人服务名称
-		ElevatorSerivceName string   `yaml:"elevatorSerivceName"` // 电梯服务名称
+		MapServiceName      string   `yaml:"mapServiceName"`      // 地图服务名称
+		RobotServiceName    string   `yaml:"robotServiceName"`    // 机器人服务名称
+		ElevatorServiceName string   `yaml:"elevatorServiceName"` // 电梯服务名称
+		BusinessServiceName string   `yaml:"businessServiceName"` // 业务服务名称
+		AreaServiceName     string   `yaml:"areaServiceName"`     // 区域服务名称
 		Port                int      `yaml:"port"`                // 监听端口
 		LogsDir             string   `yaml:"logsDir"`             // 接口查询存储目录
 	} `yaml:"self"`

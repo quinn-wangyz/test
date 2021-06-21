@@ -1,7 +1,6 @@
 package router
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"robot-api/libs/cache"
@@ -11,7 +10,7 @@ import (
 	"github.com/kataras/iris/v12"
 )
 
-func BuildingRouter(route iris.Party) {
+func BuildingRoute(route iris.Party) {
 	route.Post("/list", listBuildingHandler)                               //楼宇列表
 	route.Post("/add", addBuildingHandler)                                 //添加楼宇
 	route.Get("/get/{buildingId:string}", getBuildingHandler)              //获取楼宇详情
@@ -25,7 +24,7 @@ func BuildingRouter(route iris.Party) {
 func listBuildingHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/list"), data, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapServiceName), "/building/list"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -33,14 +32,14 @@ func listBuildingHandler(ctx iris.Context) {
 func addBuildingHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/"), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.MapServiceName), "/building/"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 //获取楼宇详情
 func getBuildingHandler(ctx iris.Context) {
 	buildingId := ctx.Params().Get("buildingId")
-	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId))
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapServiceName), "/building/", buildingId))
 	ctx.Write([]byte(resp))
 }
 
@@ -49,14 +48,14 @@ func updateBuildingHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	buildingId, _ := data["id"].(string)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapServiceName), "/building/", buildingId), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 //获取楼宇的楼层列表
 func getBuildingFloorsHandler(ctx iris.Context) {
 	buildingId := ctx.Params().Get("buildingId")
-	resp := httpUtil.Get(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId, "/floors"))
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.MapServiceName), "/building/", buildingId, "/floors"))
 	ctx.Write([]byte(resp))
 }
 
@@ -65,23 +64,13 @@ func updateBuildingFloorsHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	buildingId, _ := data["buildingId"].(string)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId, "/floors"), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.MapServiceName), "/building/", buildingId, "/floors"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 //删除楼宇
 func deleteBuildingHandler(ctx iris.Context) {
 	buildingId := ctx.Params().Get("buildingId")
-	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapSerivceName), "/building/", buildingId))
+	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapServiceName), "/building/", buildingId))
 	ctx.Write([]byte(resp))
-}
-
-//解析boby数据
-func jsonUnmarshal(data []byte) map[string]interface{} {
-	var i map[string]interface{}
-	err := json.Unmarshal(data, &i)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return i
 }
