@@ -24,7 +24,7 @@ func BusinessRoute(route iris.Party) {
 func businessListHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.BusinessServiceName), "/business/list"), data, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.DependentService.BusinessService.ServiceName), "/business/list"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -32,14 +32,14 @@ func businessListHandler(ctx iris.Context) {
 func businessAddHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.BusinessServiceName), "/business/"), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.DependentService.BusinessService.ServiceName), "/business/"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 // 获取业务信息
 func getBusinessHandler(ctx iris.Context) {
 	businessId := ctx.Params().Get("businessId")
-	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.BusinessServiceName), "/business/", businessId))
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.BusinessService.ServiceName), "/business/", businessId))
 	ctx.Write([]byte(resp))
 }
 
@@ -48,7 +48,7 @@ func updateBusinessHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	businessId, _ := data["id"].(string)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.BusinessServiceName), "/business/", businessId), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.BusinessService.ServiceName), "/business/", businessId), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -57,7 +57,7 @@ func disableBusinessHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	businessId, _ := data["id"].(string)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.BusinessServiceName), "/business/", businessId, "/disable"), nil, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.DependentService.BusinessService.ServiceName), "/business/", businessId, "/disable"), nil, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -66,13 +66,13 @@ func enableBusinessHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	businessId, _ := data["id"].(string)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.BusinessServiceName), "/business/", businessId, "/enable"), nil, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.DependentService.BusinessService.ServiceName), "/business/", businessId, "/enable"), nil, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 // 删除业务
 func removeBusinessHandler(ctx iris.Context) {
 	businessId := ctx.Params().Get("businessId")
-	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.BusinessServiceName), "/business/", businessId))
+	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.BusinessService.ServiceName), "/business/", businessId))
 	ctx.Write([]byte(resp))
 }

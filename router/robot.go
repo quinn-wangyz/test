@@ -27,20 +27,20 @@ func RobotRoute(route iris.Party) {
 func listRobotHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/list"), data, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/list"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 func getRobotInfoHandler(ctx iris.Context) {
 	deviceId := ctx.Params().Get("deviceId")
-	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId))
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId))
 	ctx.Write([]byte(resp))
 }
 
 func createRobotHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/"), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -48,13 +48,13 @@ func updateRobotHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	deviceId, _ := data["id"].(string)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 func getRobotStateHandler(ctx iris.Context) {
 	deviceId := ctx.Params().Get("deviceId")
-	resp := httpUtil.Get(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId, "/state"))
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId, "/state"))
 	ctx.Write([]byte(resp))
 }
 
@@ -62,7 +62,7 @@ func setDeployHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	deviceId, _ := data["deviceId"].(string)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId, "/deploy"), nil, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId, "/deploy"), nil, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -70,13 +70,13 @@ func undeployHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	deviceId, _ := data["deviceId"].(string)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId, "/undeploy"), nil, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId, "/undeploy"), nil, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 func removeRobotHandler(ctx iris.Context) {
 	deviceId := ctx.Params().Get("deviceId")
-	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId))
+	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId))
 	ctx.Write([]byte(resp))
 }
 
@@ -84,7 +84,7 @@ func disableRobotHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	deviceId, _ := data["deviceId"].(string)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId, "/disable"), nil, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId, "/disable"), nil, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -92,6 +92,6 @@ func enableRobotHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	deviceId, _ := data["deviceId"].(string)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.Self.RobotServiceName), "/robot/", deviceId, "/enable"), nil, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s%s%s", cache.Get(config.Conf.DependentService.RobotService.ServiceName), "/robot/", deviceId, "/enable"), nil, "application/json")
 	ctx.Write([]byte(resp))
 }

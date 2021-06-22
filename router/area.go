@@ -23,7 +23,7 @@ func AreaRoute(route iris.Party) {
 func listAreaHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.AreaServiceName), "/area/list"), data, "application/json")
+	resp := httpUtil.Post(fmt.Sprintf("%s%s", cache.Get(config.Conf.DependentService.AreaService.ServiceName), "/area/list"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
@@ -31,14 +31,14 @@ func listAreaHandler(ctx iris.Context) {
 func areaAddHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.Self.AreaServiceName), "/area/"), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s", cache.Get(config.Conf.DependentService.AreaService.ServiceName), "/area/"), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 // 获取区域详情
 func getAreaDetailHandler(ctx iris.Context) {
 	areaId := ctx.Params().Get("areaId")
-	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.AreaServiceName), "/area/", areaId))
+	resp := httpUtil.Get(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.AreaService.ServiceName), "/area/", areaId))
 	ctx.Write([]byte(resp))
 }
 
@@ -47,13 +47,13 @@ func updateAreaHandler(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request().Body)
 	data := jsonUnmarshal(body)
 	areaId, _ := data["id"].(string)
-	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.AreaServiceName), "/area/", areaId), data, "application/json")
+	resp := httpUtil.Put(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.AreaService.ServiceName), "/area/", areaId), data, "application/json")
 	ctx.Write([]byte(resp))
 }
 
 // 删除区域
 func removeAreaHandler(ctx iris.Context) {
 	areaId := ctx.Params().Get("areaId")
-	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.Self.MapServiceName), "/area/", areaId))
+	resp := httpUtil.Delete(fmt.Sprintf("%s%s%s", cache.Get(config.Conf.DependentService.AreaService.ServiceName), "/area/", areaId))
 	ctx.Write([]byte(resp))
 }
